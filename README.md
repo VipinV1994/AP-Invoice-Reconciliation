@@ -1,50 +1,67 @@
-# Vendor Aging Tracker – Accounts Payable
-
-## Overview
-This Excel-based Vendor Aging Tracker monitors outstanding invoices and categorizes them into aging buckets to support cash flow management and vendor risk analysis.
-
----
-
-## Features
-
-- Paid vs Unpaid tracking
-- Automatic days outstanding calculation
-- Aging bucket classification:
-  - 0–30 Days
-  - 31–60 Days
-  - 61–90 Days
-  - 90+ Days
-- Vendor-wise aging summary using Pivot Table
+# Corporate Card Reconciliation Control
+GitHub Project Name: Corporate-Card-Reconciliation-Control
+Purpose: Audit-ready corporate card reconciliation workbook with pivot dashboard, showing policy compliance, duplicate detection, aging, and risk levels.
 
 ---
 
-## Key Formulas Used
+## Sheet 1: Card_Transactions
+Headers (A-P):
+A  Cardholder Name
+B  Department
+C  Transaction Date
+D  Statement Month
+E  Vendor Name
+F  Expense Category
+G  Business Purpose
+H  Transaction Amount
+I  Receipt Received (Yes/No)
+J  Expense Report Submitted (Yes/No)
+K  Policy Limit
+L  Over Limit Flag
+M  Missing Receipt Flag
+N  Duplicate Flag
+O  Days Outstanding
+P  Risk Level
 
-Status:
-=IF(ISBLANK(F2),"Unpaid","Paid")
+Formulas:
+L2 (Over Limit Flag): =IF(H2>K2,"Over Limit","OK")
+M2 (Missing Receipt Flag): =IF(I2="No","Missing Receipt","OK")
+N2 (Duplicate Detection): =IF(COUNTIFS($C:$C,C2,$E:$E,E2,$H:$H,H2)>1,"Duplicate","OK")
+O2 (Days Outstanding): =IF(J2="No",TODAY()-C2,0)
+P2 (Risk Level): 
+=IF(L2="Over Limit","High",
+IF(M2="Missing Receipt","High",
+IF(N2="Duplicate","High",
+IF(O2>30,"Medium","Low"))))
 
-Days Outstanding:
-=IF(G2="Paid",0,TODAY()-D2)
-
-Aging Bucket:
-=IF(G2="Paid","Paid",
-IF(H2<=30,"0-30 Days",
-IF(H2<=60,"31-60 Days",
-IF(H2<=90,"61-90 Days",
-"90+ Days"))))
+Optional Enhancements:
+- Auto policy limit lookup by category (VLOOKUP/XLOOKUP)
+- Escalation flag after 45 days
+- Department risk scoring
+- Trend analysis by month
 
 ---
 
-## Purpose
+## Sheet 2: Compliance_Dashboard
+KPI Metrics:
+Total Transactions =COUNTA(Card_Transactions!A:A)-1
+Over Limit Count   =COUNTIF(Card_Transactions!L:L,"Over Limit")
+Missing Receipts   =COUNTIF(Card_Transactions!M:M,"Missing Receipt")
+Duplicates         =COUNTIF(Card_Transactions!N:N,"Duplicate")
+High Risk          =COUNTIF(Card_Transactions!P:P,"High")
 
-This project demonstrates:
-- Strong Accounts Payable knowledge
-- Aging analysis skills
-- Excel automation and reporting
-- Cash flow and vendor risk monitoring
+Pivot Table Setup:
+- Rows → Cardholder Name
+- Columns → Risk Level
+- Values → Cardholder Name (set to Count)
+
+Conditional Formatting:
+- High → Red
+- Medium → Orange
+- Low → Green
+
+Optional: Add Slicer for Risk Level
 
 ---
 
-## Author
-Vipin
-Accounts Payable Professional
+## GitHub Instructions
