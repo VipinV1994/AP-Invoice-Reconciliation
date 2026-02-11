@@ -1,67 +1,50 @@
-# Duplicate Payment Detection – Accounts Payable Control
+# Vendor Aging Tracker – Accounts Payable
 
 ## Overview
-This Excel-based workbook is designed to detect and report potential duplicate vendor payments within an Accounts Payable workflow.
-
-The file uses formula-driven logic to automatically flag duplicate invoices based on:
-- Vendor Name
-- Invoice Number
-- Invoice Amount
-
-This helps prevent overpayments and strengthens internal AP controls.
+This Excel-based Vendor Aging Tracker monitors outstanding invoices and categorizes them into aging buckets to support cash flow management and vendor risk analysis.
 
 ---
 
 ## Features
 
-- Automated duplicate detection using COUNTIFS
-- Invoice status tracking (Paid / Unpaid)
-- Separate duplicate-only review sheet
-- Summary report showing:
-  - Total duplicate invoices
-  - Total duplicate exposure amount
+- Paid vs Unpaid tracking
+- Automatic days outstanding calculation
+- Aging bucket classification:
+  - 0–30 Days
+  - 31–60 Days
+  - 61–90 Days
+  - 90+ Days
+- Vendor-wise aging summary using Pivot Table
 
 ---
 
-## How Duplicate Detection Works
+## Key Formulas Used
 
-The workbook uses the following Excel formula:
+Status:
+=IF(ISBLANK(F2),"Unpaid","Paid")
 
-=IF(COUNTIFS($A:$A,A2,$B:$B,B2,$D:$D,D2)>1,"DUPLICATE","OK")
+Days Outstanding:
+=IF(G2="Paid",0,TODAY()-D2)
 
-If the combination of Vendor + Invoice Number + Amount appears more than once, the invoice is flagged as DUPLICATE.
-
----
-
-## Sheets Included
-
-1. Invoice_Data – Main data entry sheet
-2. Duplicate_Only_View – Filtered duplicate invoices
-3. Summary_Report – Dashboard showing duplicate counts and financial impact
+Aging Bucket:
+=IF(G2="Paid","Paid",
+IF(H2<=30,"0-30 Days",
+IF(H2<=60,"31-60 Days",
+IF(H2<=90,"61-90 Days",
+"90+ Days"))))
 
 ---
 
 ## Purpose
 
 This project demonstrates:
-- Strong knowledge of Accounts Payable processes
-- Internal control awareness
-- Excel automation skills
-- Reconciliation and exception handling
-
----
-
-## Tools Used
-
-- Microsoft Excel
-- COUNTIFS
-- IF logic
-- Conditional Formatting
-- Basic Reporting Controls
+- Strong Accounts Payable knowledge
+- Aging analysis skills
+- Excel automation and reporting
+- Cash flow and vendor risk monitoring
 
 ---
 
 ## Author
-
 Vipin
 Accounts Payable Professional
